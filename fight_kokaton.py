@@ -1,8 +1,10 @@
+import math
 import os
 import random
 import sys
 import time
 import pygame as pg
+
 
 
 WIDTH = 1100  # ゲームウィンドウの幅
@@ -69,6 +71,7 @@ class Bird:
         self.img = __class__.imgs[(+5, 0)]
         self.rct: pg.Rect = self.img.get_rect()
         self.rct.center = xy
+        self.dire=(+5,0)
 
     def change_img(self, num: int, screen: pg.Surface):
         """
@@ -96,6 +99,8 @@ class Bird:
             self.rct.move_ip(-sum_mv[0], -sum_mv[1])
         if not (sum_mv[0] == 0 and sum_mv[1] == 0):
             self.img = __class__.imgs[tuple(sum_mv)]
+        if sum_mv!=[0,0]:
+            self.dire = tuple(sum_mv)
         screen.blit(self.img, self.rct)
 
 
@@ -110,11 +115,12 @@ class Beam:
         引数 bird：ビームを放つこうかとん（Birdインスタンス）
         """
         self.img = pg.image.load("fig/beam.png")
-        self.rct = self.img.get_rect()
-        self.rct.centery = bird.rct.centery
-        self.rct.left = bird.rct.right
-        self.vx, self.vy = +5, 0
-
+        self.vx, self.vy = bird.dire
+        theta=math.atan2(-self.vy, self.vx)
+        self.img = pg.transform.rotozoom(self.img, math.degrees(theta),1.0)
+        beam_center_x = bird.rct.centerx + bird.rct.width * self.vx / 5
+        beam_center_y = bird.rct.centery + bird.rct.height * self.vy / 5
+        self.rct = self.img.get_rect(center=(beam_center_x, beam_center_y))
     def update(self, screen: pg.Surface):
         """
         ビームを速度ベクトルself.vx, self.vyに基づき移動させる
