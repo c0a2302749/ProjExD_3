@@ -168,6 +168,8 @@ def main():
         if beam and bomb:
             if beam.rct.colliderect(bomb.rct):
                 bomb,beam = None,None
+                bird.change_img(6, screen)
+                pg.display.update()
                 
 
         key_lst = pg.key.get_pressed()
