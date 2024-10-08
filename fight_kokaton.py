@@ -156,6 +156,7 @@ class Bomb:
         self.rct.move_ip(self.vx, self.vy)
         screen.blit(self.img, self.rct)
 
+
 class expllosion:
     def __init__(self, bomb):
         self.images = [
@@ -173,6 +174,8 @@ class expllosion:
             self.index = (self.index + 1) % len(self.images)
             self.image = self.images[self.index]
             screen.blit(self.image, self.rct)
+
+
 def main():
     pg.display.set_caption("たたかえ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
@@ -180,7 +183,7 @@ def main():
     bird = Bird((300, 200))
     beams = []
     bombs = [Bomb((255, 0, 0), 10) for _ in range(NUM_OF_BOMBS)]
-    expls =[]
+    expls = []
     score = Score()
     clock = pg.time.Clock()
     tmr = 0
@@ -213,7 +216,7 @@ def main():
             bombs = [bomb for bomb in bombs if bomb is not None]
         beams = [beam for beam in beams if beam is not None]
         expls = [expl for expl in expls if expl.life > 0]
-        
+
         for beam in beams:
             if check_bound(beam.rct) != (True, True):
                 beams.remove(beam)
