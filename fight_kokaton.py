@@ -6,7 +6,6 @@ import time
 import pygame as pg
 
 
-
 WIDTH = 1100  # ゲームウィンドウの幅
 HEIGHT = 650  # ゲームウィンドウの高さ
 NUM_OF_BOMBS = 5
@@ -28,14 +27,24 @@ def check_bound(obj_rct: pg.Rect) -> tuple[bool, bool]:
 
 
 class Score:
+    """
+    画面上のスコアに関するクラス
+    """
+
     def __init__(self):
+        """
+        スコア表示設定
+        """
         self.fonto = pg.font.SysFont("hgp創英角ﾎﾟｯﾌﾟ体", 30)
         self.score = 0
         self.img = self.fonto.render(f"Score:{self.score}", 0, (0, 0, 255))
         self.rct = self.img.get_rect()
-        self.rct.center = (100, HEIGHT-50)
+        self.rct.center = (100, HEIGHT-50)  # 文字の位置固定
 
     def update(self, screen: pg.Surface):
+        """
+        スコア表示の更新
+        """
         self.img = self.fonto.render(f"Score:{self.score}", 0, (0, 0, 255))
         screen.blit(self.img, self.rct)
 
@@ -71,7 +80,7 @@ class Bird:
         self.img = __class__.imgs[(+5, 0)]
         self.rct: pg.Rect = self.img.get_rect()
         self.rct.center = xy
-        self.dire=(+5,0)
+        self.dire = (+5, 0)
 
     def change_img(self, num: int, screen: pg.Surface):
         """
@@ -99,7 +108,6 @@ class Bird:
             self.rct.move_ip(-sum_mv[0], -sum_mv[1])
         if not (sum_mv[0] == 0 and sum_mv[1] == 0):
             self.img = __class__.imgs[tuple(sum_mv)]
-        if sum_mv!=[0,0]:
             self.dire = tuple(sum_mv)
         screen.blit(self.img, self.rct)
 
@@ -116,11 +124,12 @@ class Beam:
         """
         self.img = pg.image.load("fig/beam.png")
         self.vx, self.vy = bird.dire
-        theta=math.atan2(-self.vy, self.vx)
-        self.img = pg.transform.rotozoom(self.img, math.degrees(theta),1.0)
+        theta = math.atan2(-self.vy, self.vx)
+        self.img = pg.transform.rotozoom(self.img, math.degrees(theta), 1.0)
         beam_center_x = bird.rct.centerx + bird.rct.width * self.vx / 5
         beam_center_y = bird.rct.centery + bird.rct.height * self.vy / 5
         self.rct = self.img.get_rect(center=(beam_center_x, beam_center_y))
+
     def update(self, screen: pg.Surface):
         """
         ビームを速度ベクトルself.vx, self.vyに基づき移動させる
@@ -164,6 +173,10 @@ class Bomb:
 
 
 class expllosion:
+    """
+    爆弾のアニメーション
+    """
+
     def __init__(self, bomb):
         self.images = [
             pg.image.load("fig/explosion.gif"),
